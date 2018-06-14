@@ -380,8 +380,8 @@ namespace TriRods
   {
   public:
     const PointKinematics* PD; // kinematic data at this point
-    const VarPointKinematics* deltaPD; // Variation 1
-    const VarPointKinematics* DELTAPD; // Variation 2
+    const VarPointKinematics* deltaPD; // Variation 1 
+    const VarPointKinematics* DELTAPD; // Variation 2 
     double vvEpsilon[2][2], vvRho[2][2], vvDelta[2]; // 2nd variations of strain measures
 
     // Default constructor
