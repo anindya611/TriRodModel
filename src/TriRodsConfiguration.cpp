@@ -1,0 +1,252 @@
+#include <TriRodsConfiguration.h>
+#include <TriRodsUtils.h>
+#include <cassert>
+#include <cmath>
+#include <gsl/gsl_sf_bessel.h>
+
+namespace TriRods
+{
+  // Copy constructor
+  TriRodsConfiguration::TriRodsConfiguration(const TriRodsConfiguration& Obj)
+    :nNodesX(Obj.nNodesX), nElmsX(Obj.nElmsX), nQuadsPerElmX(Obj.nQuadsPerElmX), phi0(Obj.phi0), phi1(Obj.phi1), phi2(Obj.phi2), Lambda(Obj.Lambda), dirSpatial(Obj.dirSpatial), isInitialized(Obj.isInitialized) {}
+
+  // Set the values of the centerline coordinates
+  void TriRodsConfiguration::SetLine0(const int a, Vec3 val)
+  {
+    auto& vec = phi0[a];
+    for(int i=0; i<3; ++i)
+      vec[i] = val[i];
+    return;
+  }
+
+  // Set the values of the coordinates of line_1
+  void TriRodsConfiguration::SetLine1(const int a, Vec3 val)
+  {
+    auto& vec = phi1[a];
+    for(int i=0; i<3; ++i)
+      vec[i] = val[i];
+    return;
+  }
+
+  // Set the values of the coordinates of line_2
+  void TriRodsConfiguration::SetLine2(const int a, Vec3 val)
+  {
+    auto& vec = phi2[a];
+    for(int i=0; i<3; ++i)
+      vec[i] = val[i];
+    return;
+  }
+
+  // Set the values of rotations
+  void TriRodsConfiguration::SetRotation(const int elm, const int q, Mat3 val)
+  {
+    auto& mat = Lambda[nQuadsPerElmX*elm+q];
+    for(int i=0; i<3; ++i)
+      for(int j=0; j<3; ++j)
+	mat[i][j] = val[i][j];
+    return;
+  }
+
+  // Set the director
+  void TriRodsConfiguration::SetDirSpatial(const int elm, const int q, Vec3 val)
+  {
+    auto& vec = dirSpatial[elm*nQuadsPerElmX + q];
+    for (int i=0; i<3; ++i)
+      vec[i] = val[i];
+    return;
+  }
+
+  // Return centerline coordinates
+  const Vec3& TriRodsConfiguration::GetLine0(const int a) const
+  { return phi0[a]; }
+
+  // Return line_1 coordinates
+  const Vec3& TriRodsConfiguration::GetLine1(const int a) const
+  { return phi1[a]; }
+
+  // Retune line_2 coordinates
+  const Vec3& TriRodsConfiguration::GetLine2(const int a) const
+  { return phi2[a]; }
+
+  // Return centerline coordinates
+  const std::vector<Vec3>& TriRodsConfiguration::GetLine0() const
+  { return phi0; }
+
+  // Return line_1 coordinates
+  const std::vector<Vec3>& TriRodsConfiguration::GetLine1() const
+  { return phi1; }
+
+  // Retune line_2 coordinates
+  const std::vector<Vec3>& TriRodsConfiguration::GetLine2() const
+  { return phi2; }
+
+  // Returns the rotation tensor
+  const Mat3& TriRodsConfiguration::GetRotations(const int elm, const int q) const
+  { return Lambda[nQuadsPerElmX*elm+q]; }
+
+  // Returns the rotation tensor
+  const std::vector<Mat3>& TriRodsConfiguration::GetRotations() const
+  { return Lambda; }
+
+  // Get the director
+  const Vec3& TriRodsConfiguration::GetDirSpatial(const int elm, const int q) const
+  { return dirSpatial[nQuadsPerElmX*elm + q]; }
+  
+  // Get the director
+  const std::vector<Vec3>& TriRodsConfiguration::GetDirSpatial() const
+  { return dirSpatial; }
+  
+
+  // Update the line_0
+  void TriRodsConfiguration::UpdateLine0(const int a, const Vec3& incPhi)
+  {
+    auto& vec = phi0[a];
+    for(int i=0; i<3; ++i)
+      vec[i] += incPhi[i];
+    isInitialized = false;
+    return;
+  }
+
+  // Update the line_1
+  void TriRodsConfiguration::UpdateLine1(const int a, const Vec3& incPhi)
+  {
+    auto& vec = phi1[a];
+    for(int i=0; i<3; ++i)
+      vec[i] += incPhi[i];
+    isInitialized = false;
+    return;
+  }
+
+  // Update the line_2
+  void TriRodsConfiguration::UpdateLine2(const int a, const Vec3& incPhi)
+  {
+    auto& vec = phi2[a];
+    for(int i=0; i<3; ++i)
+      vec[i] += incPhi[i];
+    isInitialized = false;
+    return;
+  }
+
+  // Update the centerline/line_0 coordinates
+  void TriRodsConfiguration::UpdateLine0(const std::vector<Vec3>& incPhi)
+  {
+    for(int a=0; a<nNodesX; ++a)
+      UpdateLine0(a, incPhi[a]);
+    isInitialized = false;
+    return;
+  }
+
+  // Update the line_1 coordinates
+  void TriRodsConfiguration::UpdateLine1(const std::vector<Vec3>& incPhi)
+  {
+    for(int a=0; a<nNodesX; ++a)
+      UpdateLine1(a, incPhi[a]);
+    isInitialized = false;
+    return;
+  }
+  
+  // Update the line_1 coordinates
+  void TriRodsConfiguration::UpdateLine2(const std::vector<Vec3>& incPhi)
+  {
+    for(int a=0; a<nNodesX; ++a)
+      UpdateLine2(a, incPhi[a]);
+    isInitialized = false;
+    return;
+  }
+  
+  // Update the rotations
+  void TriRodsConfiguration::UpdateRotations(const int elm, const int q, const Vec3& incDirSpat)
+  {
+    // Current rotation 
+    Mat3 Rold = Lambda[elm*nQuadsPerElmX+q];
+    
+    // Current spatial director
+    Vec3 tOld = dirSpatial[elm*nQuadsPerElmX+q];
+    
+    // Compute delt from incT
+    /*Vec3 inct;
+    for(int i=0; i<3; ++i)
+      {
+	inct[i] = 0;
+	for(int j=0; j<3; ++j)
+	  {
+	    inct[i] += Rold[i][j]*incT[j];
+	  }
+	  }*/
+    
+    // Compute the cross-product dirSpatial x delt
+    Vec3 delTheta = CrossProduct(tOld, incDirSpat);
+    
+    // Compute the exponential of delTheta
+    double exp[3][3];
+    ExpSO3(&delTheta[0], exp);
+    
+    // Update rotations: Lambda_new = exp(theta) Lambda
+    auto& RNew = Lambda[elm*nQuadsPerElmX+q];
+    for(int i=0; i<3; ++i)
+      for(int j=0; j<3; ++j)
+	{
+	  RNew[i][j] = 0.;
+	  for(int k=0; k<3; ++k)
+	    {
+	      RNew[i][j] += exp[i][k]*Rold[k][j];
+	    }
+	}
+    isInitialized = false;
+    return;
+    }
+
+  // Update the rotations
+  void TriRodsConfiguration::UpdateRotations(const std::vector<Vec3>& incDirSpat)
+  {
+    for(int e=0; e<nElmsX; ++e)
+      for(int q=0; q<nQuadsPerElmX; ++q)
+	UpdateRotations(e, q, incDirSpat[nQuadsPerElmX*e+q]);
+    isInitialized = false;
+    return;
+  }
+
+  // Update the spatial_director
+  void TriRodsConfiguration::UpdateDirSpatial(const int elm, const int q, const Vec3& incDirSpat)
+  {
+    // Current rotation 
+    //Mat3 Rold = Lambda[elm*nQuadsPerElmX+q];
+    
+    // Compute delt from incT
+    /*Vec3 incDirSpat;
+    for(int i=0; i<3; ++i)
+      {
+	incDirSpat[i] = 0;
+	for(int j=0; j<3; ++j)
+	  {
+	    incDirSpat[i] += Rold[i][j]*incDirMat[j];
+	  }
+	  }*/
+
+    // magnitude of incDirSpat
+    double modIncDirSpat = sqrt(incDirSpat[1]*incDirSpat[1] +
+			  incDirSpat[2]*incDirSpat[2] +
+			  incDirSpat[3]*incDirSpat[3]);
+
+    // compute updated spatial_director
+    // cos(x) t + (sin(x)/x) incDirSpat
+    
+    double sinc = gsl_sf_bessel_j0(modIncDirSpat); // sin(x)/x
+    Vec3& T = dirSpatial[elm*nQuadsPerElmX+q];
+    for(int i=0; i<3; ++i)
+      { T[i] *= std::cos(modIncDirSpat);
+	T[i] += sinc*incDirSpat[i]; }
+    isInitialized = false;
+    return;
+  }
+
+  // Update the spatial_director
+  void TriRodsConfiguration::UpdateDirSpatial(const std::vector<Vec3>& incDirSpat)
+  {
+    for(int e=0; e<nElmsX; ++e)
+      for(int q=0; q<nQuadsPerElmX; ++q)
+	UpdateDirSpatial(e, q, incDirSpat[nQuadsPerElmX*e+q]);
+    isInitialized = false;
+    return;
+  }
+}

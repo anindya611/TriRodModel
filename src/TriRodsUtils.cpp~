@@ -1,0 +1,78 @@
+#include <TriRodsUtils.h>
+#include <cmath>
+#include <gsl/gsl_sf_bessel.h>
+
+// Utility functions
+namespace TriRods
+{
+  // Computes the axial vector of a 3x3 skew symmetric matrix
+  void AxialVector(const double skw[][3], double* theta)
+  {
+    theta[0] = skw[2][1];
+    theta[1] = skw[0][2];
+    theta[2] = skw[1][0]; 
+    return;
+  }
+
+  // Computes the skew symmetric matrix for a given axial vector
+  void HodgeStar(const double* theta, double skw[][3])
+  {
+    skw[0][0] = 0.;        skw[0][1] = -theta[2]; skw[0][2] = theta[1];
+    skw[1][0] = theta[2];  skw[1][1] = 0.;        skw[1][2] = -theta[0];
+    skw[2][0] = -theta[1]; skw[2][1] = theta[0];  skw[2][2] = 0.;
+    return;
+  }
+
+
+  // Computes the exponential map given an axial vector
+  void ExpSO3(const double* vec, double Mat[][3])
+  {
+    double Skw[3][3];
+    HodgeStar(vec, Skw);
+    ExpSO3(Skw, Mat);
+    return;
+  }
+
+  
+  // Computes the exponential map given a skew symm matrix
+  void ExpSO3(const double skw[][3], double Mat[][3])
+  {
+    // I + sinc(x) Skw + (1-cos(x))/x^2 Skw^2
+    // = I + sinc(x) skw + (1/2) sinc(x/2)^2 skw^2
+    
+    // Angle
+    double angle = sqrt(skw[2][1]*skw[2][1] +
+			skw[0][2]*skw[0][2] +
+			skw[1][0]*skw[1][0]);
+    
+    double sinc = gsl_sf_bessel_j0(angle); // sin(x)/x
+    double sincby2sq = gsl_sf_bessel_j0(angle/2.);  // sin(x/2)/(x/2)
+    sincby2sq *= sincby2sq;
+    
+    for(int i=0; i<3; ++i)
+      for(int j=0; j<3; ++j)
+	{
+	  Mat[i][j] = 0.;
+	  for(int k=0; k<3; ++k)
+	    Mat[i][j] += skw[i][k]*skw[k][j];
+	  Mat[i][j] *= 0.5*sincby2sq;
+	  Mat[i][j] += sinc*skw[i][j];
+	}
+    Mat[0][0] += 1.;
+    Mat[1][1] += 1.;
+    Mat[2][2] += 1.;
+  }
+
+  // Comutes cross-product of two vectors
+  Vec3 CrossProduct(const Vec3 v1, const Vec3 v2)
+  {
+    Vec3 v3;
+    double Skw[3][3];
+    HodgeStar(v1, Skw);
+    for(int i=0; i<3; ++i)
+      for(int j=0; j<3; ++j)
+	v3[i] = Skw[i][j]*v2[j];
+    return v3;
+  }
+}
+

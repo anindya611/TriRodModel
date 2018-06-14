@@ -1,0 +1,115 @@
+#ifndef TRI_RODS_CONFIGURATION_H
+#define TRI_RODS_CONFIGURATION_H
+
+#include <vector>
+#include <array>
+
+namespace TriRods
+{
+  using Vec3 = std::array<double,3>;
+  using Mat3 = std::array<std::array<double,3>,3>;
+
+  class TriRodsConfiguration
+  {
+  public:
+    // Constructor
+    TriRodsConfiguration(int nnodesX, int nelmsX, int nquadsperelmX)
+      :nNodesX(nnodesX), nElmsX(nelmsX), nQuadsPerElmX(nquadsperelmX),
+      phi0(nNodesX),phi1(nNodesX),phi2(nNodesX),Lambda(nElmsX*nQuadsPerElmX),dirSpatial(nElmsX*nQuadsPerElmX),isInitialized(false) {}
+
+    // Destructor, does nothing
+    inline virtual ~TriRodsConfiguration() {}
+
+    // Copy constructor
+    TriRodsConfiguration(const TriRodsConfiguration& Obj);
+
+    // Mark the state of the shell as initialized
+    inline void SetInitialized()
+    { isInitialized = true; }
+
+    // Returns if the configuration has been set or not
+    inline bool IsInitialized() const
+    { return isInitialized; }
+
+    // Set the values of centerline coordinates
+    void SetLine0(const int a, Vec3 val);
+
+    // Set the values of edge_1 of the shell
+    void SetLine1(const int a, Vec3 val);
+
+    // Set the values of edge_2 of the shell
+    void SetLine2(const int a, Vec3 val);
+
+    // Set the values of rotations
+    void SetRotation(const int elm, const int q, Mat3 val);
+
+    // Set the spatial_director
+    void SetDirSpatial(const int elm, const int q, Vec3 val);
+
+    // Returns the number of nodes along X
+    inline int GetNumNodesX() const
+    { return nNodesX; }
+
+    // Returns the number of elements along X
+    inline int GetNumElementsX() const
+    { return nElementsX; }
+
+    // Returns the number of quadrature points per elm along X
+    inline int GetNumQuadPtsPerElementX() const
+    { return nQuadsPerElmX; }
+  
+    // Returns the Line coordinates
+    const Vec3& GetLine0(const int a) const;
+    const Vec3& GetLine1(const int a) const;
+    const Vec3& GetLine2(const int a) const;
+
+    // Returns the Line coordinates
+    const std::vector<Vec3>& GetLine0() const;
+    const std::vector<Vec3>& GetLine1() const;
+    const std::vector<Vec3>& GetLine2() const;
+    
+    // Returns the Rotation tensor
+    const Mat3& GetRotations(const int elm, const int q) const;
+
+    // Returns the Rotation tensor
+    const std::vector<Mat3>& GetRotations() const;
+
+    // Get the spatial_director
+    const Vec3& GetDirSpatial(const int elm, const int q) const;
+
+    // Get the spatial_director
+    const std::vector<Vec3>& GetDirSpatial() const;
+
+    // Updates the Line coordinates
+    void UpdateLine0(const int a, const Vec3& incPhi);
+    void UpdateLine1(const int a, const Vec3& incPhi);
+    void UpdateLine2(const int a, const Vec3& incPhi);
+
+    // Updates the Line coordinates
+    void UpdateLine0(const std::vector<Vec3>& incPhi);
+    void UpdateLine1(const std::vector<Vec3>& incPhi);
+    void UpdateLine2(const std::vector<Vec3>& incPhi);
+
+    // Update the rotations
+    void UpdateRotations(const int elm, const int q, const Vec3& incDirSpat);    
+    // Update the rotations
+    void UpdateRotations(const std::vector<Vec3>& incDirSpat);
+
+    // Update the spatial_director
+    void UpdateDirSpatial(const int a, const int q, const Vec3& incDirSpat);
+    
+    // Update the spatial_director
+    void UpdateDirSpatial(const std::vector<Vec3>& incDirSpat);
+    
+  private:
+    const int nNodesX, nElmsX, nQuadsPerElmX; // No. of nodes, elements, quadrature points per element along X
+    std::vector<Vec3> phi0; // Centerline of shell
+    std::vector<Vec3> phi1; // 1st edge of shell
+    std::vector<Vec3> phi2; // 2nd edge of shell
+    std::vector<Mat3> Lambda; // vector of rotation tensor 
+    std::vector<Vec3> dirSpatial; // spatial_director of shell 
+    bool isInitialized; // has the initial configuration of the shell initialized
+  };
+}
+
+#endif
