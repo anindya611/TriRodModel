@@ -7,7 +7,7 @@
 
 // Random double
 std::random_device rd; // will be used to obtain a seed for the random number engine
-std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd() 
 std::uniform_real_distribution<> dis(-1.,1.);
 
 using namespace TriRods;
@@ -53,11 +53,13 @@ int main()
   PointKinematics PD;
   Initialize(PD);
 
-  //////////
-  std::cout<<'\n'<<'\n'<<"for PD=========="<<'\n';
-  std::cout<<std::abs(PD.dirSpatial[0]*PD.d1DirSpatial[0] + PD.dirSpatial[1]*PD.d1DirSpatial[1] + PD.dirSpatial[2]*PD.d1DirSpatial[2])<<'\n';
-  assert(std::abs(PD.dirSpatial[0]*PD.d1DirSpatial[0] + PD.dirSpatial[1]*PD.d1DirSpatial[1] + PD.dirSpatial[2]*PD.d1DirSpatial[2]) < 1.e-10);
-  /////////
+  /*
+//////////
+std::cout<<'\n'<<'\n'<<"for PD=========="<<'\n';
+std::cout<<std::abs(PD.dirSpatial[0]*PD.d1DirSpatial[0] + PD.dirSpatial[1]*PD.d1DirSpatial[1] + PD.dirSpatial[2]*PD.d1DirSpatial[2])<<'\n';
+assert(std::abs(PD.dirSpatial[0]*PD.d1DirSpatial[0] + PD.dirSpatial[1]*PD.d1DirSpatial[1] + PD.dirSpatial[2]*PD.d1DirSpatial[2]) < 1.e-10);
+/////////
+*/
   
   const double y = 0.1;
   const double w = 0.2;
@@ -73,32 +75,24 @@ int main()
       varA.eta0[i] = dis(gen);
       varA.eta1[i] = dis(gen);
       varA.eta2[i] = dis(gen);
-      //varA.delDirSpatial[i] = dis(gen); ////
       varA.d1Eta0[i] = dis(gen);
       varA.d1Eta1[i] = dis(gen);
       varA.d1Eta2[i] = dis(gen);
-      //varA.d1DelDirSpatial[i] = dis(gen); ////
     }
-
-  ////
   for(int i=0; i<2; ++i)
     varA.delDirMaterial[i] = dis(gen);
-  ////
-  
   varA.ComputeDelDirSpatial();
-  
-  ////
   double kA = 0.;
   GenerateRandomD1DelDirSpatial(PD, varA, kA, varA.d1DelDirSpatial);
-  ////
-  
-  //////////
-  std::cout<<'\n'<<'\n'<<"for varA=========="<<'\n';
-  std::cout<<std::abs(kA+(PD.dirSpatial[0]*varA.d1DelDirSpatial[0]+PD.dirSpatial[1]*varA.d1DelDirSpatial[1]+PD.dirSpatial[2]*varA.d1DelDirSpatial[2]))<<'\n'<<'\n';
-  assert(std::abs(kA+(PD.dirSpatial[0]*varA.d1DelDirSpatial[0]+PD.dirSpatial[1]*varA.d1DelDirSpatial[1]+PD.dirSpatial[2]*varA.d1DelDirSpatial[2]))<1.e-10);
-  /////////
-  
-  
+
+  /*
+//////////
+std::cout<<'\n'<<'\n'<<"for varA=========="<<'\n';
+std::cout<<std::abs(kA+(PD.dirSpatial[0]*varA.d1DelDirSpatial[0]+PD.dirSpatial[1]*varA.d1DelDirSpatial[1]+PD.dirSpatial[2]*varA.d1DelDirSpatial[2]))<<'\n'<<'\n';
+assert(std::abs(kA+(PD.dirSpatial[0]*varA.d1DelDirSpatial[0]+PD.dirSpatial[1]*varA.d1DelDirSpatial[1]+PD.dirSpatial[2]*varA.d1DelDirSpatial[2]))<1.e-10);
+/////////
+*/
+   
   varA.ComputeVarStrains(y,w);
  
   VarPointKinematics varB;
@@ -108,30 +102,23 @@ int main()
       varB.eta0[i] = dis(gen);
       varB.eta1[i] = dis(gen);
       varB.eta2[i] = dis(gen);
-      //varB.delDirSpatial[i] = dis(gen); ////
       varB.d1Eta0[i] = dis(gen);
       varB.d1Eta1[i] = dis(gen);
       varB.d1Eta2[i] = dis(gen);
-      //varB.d1DelDirSpatial[i] = dis(gen); ////
     }
-
-  ////
   for(int i=0; i<2; ++i)
     varB.delDirMaterial[i] = dis(gen);
-  ////
-
   varB.ComputeDelDirSpatial();
-
-  ////
   double kB = 0.;
   GenerateRandomD1DelDirSpatial(PD, varB, kB, varB.d1DelDirSpatial);
-  ////
 
-  //////////
-  std::cout<<'\n'<<'\n'<<"for varB============="<<'\n';
-  std::cout<<std::abs(kB+(PD.dirSpatial[0]*varB.d1DelDirSpatial[0]+PD.dirSpatial[1]*varB.d1DelDirSpatial[1]+PD.dirSpatial[2]*varB.d1DelDirSpatial[2]))<<'\n'<<'\n';
-  assert(std::abs(kB+(PD.dirSpatial[0]*varB.d1DelDirSpatial[0]+PD.dirSpatial[1]*varB.d1DelDirSpatial[1]+PD.dirSpatial[2]*varB.d1DelDirSpatial[2]))<1.e-10);
-  /////////
+  /*
+//////////
+std::cout<<'\n'<<'\n'<<"for varB============="<<'\n';
+std::cout<<std::abs(kB+(PD.dirSpatial[0]*varB.d1DelDirSpatial[0]+PD.dirSpatial[1]*varB.d1DelDirSpatial[1]+PD.dirSpatial[2]*varB.d1DelDirSpatial[2]))<<'\n'<<'\n';
+assert(std::abs(kB+(PD.dirSpatial[0]*varB.d1DelDirSpatial[0]+PD.dirSpatial[1]*varB.d1DelDirSpatial[1]+PD.dirSpatial[2]*varB.d1DelDirSpatial[2]))<1.e-10);
+/////////
+*/
   
   varB.ComputeVarStrains(y,w);
 
@@ -165,11 +152,6 @@ int main()
   double varBEpsilon[2][2], varBRho[2][2], varBDelta[2];
   ComputeNumericalVariations(PD, varB, EPS, varBEpsilon, varBRho, varBDelta);
 
-  // cout //
-  std::cout<<"\n=======";
-  std::cout<<"\n1st variations are OK \n";
-  // // // //
-
   if(PRINT)
     {
       std::cout<<"\nVariation of Epsilon: ";
@@ -194,48 +176,135 @@ int main()
   varAB.PD = &PD;
   varAB.deltaPD = &varA;  
   varAB.DELTAPD = &varB;
-
   varAB.ComputeVarVarStrains();
 
-  ////
   double delDELt[3], delDELtPrime[3];
   double temp10 = 0.;
   double temp11 = 0.;
   double temp12 = 0.;
-  double temp13 = 0.;
   for(int i=0; i<3; ++i)
     {
       temp10 += varA.delDirSpatial[i]*varB.delDirSpatial[i];
       temp11 += varA.d1DelDirSpatial[i]*varB.delDirSpatial[i];
       temp12 += varA.delDirSpatial[i]*varB.d1DelDirSpatial[i];
-      temp13 += varA.delDirSpatial[i]*varB.delDirSpatial[i];
     }
   for(int i=0; i<3; ++i)
     {
       delDELt[i] = -temp10*PD.dirSpatial[i];
-      delDELtPrime[i] = -temp11*PD.dirSpatial[i] - temp12*PD.dirSpatial[i] - temp13*PD.d1DirSpatial[i];
+      delDELtPrime[i] = -temp11*PD.dirSpatial[i] - temp12*PD.dirSpatial[i] - temp10*PD.d1DirSpatial[i]; // 
     }
-  ////
+
+  /*
+////
+double temp20 = 0.;
+double temp21 = 0.;
+double temp22 = 0.;
+
+for(int i=0; i<3; ++i)
+{
+temp20 += PD.d1DirSpatial[i]*varB.delDirSpatial[i];
+temp21 += PD.dirSpatial[i]*varB.d1DelDirSpatial[i];
+temp22 += PD.dirSpatial[i]*varB.delDirSpatial[i];
+}
+std::cout<<'\n'<<'\n'<<"temp20 is: "<<temp20<<'\n'<<"temp21 is: "<<temp21<<'\n'<<"temp20+temp21 is: "<<(temp20+temp21)<<'\n'<<"temp22 is: "<<temp22<<'\n'<<'\n';
+assert((temp20+temp21)<1e-10);
+////
+*/
+
+  /*
+////
+std::cout<<"\n\nPD.t is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<PD.dirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+
+std::cout<<"\n\nPD.t' is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<PD.d1DirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+
+std::cout<<"\n\nvarA.delt is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<varA.delDirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+
+std::cout<<"\n\nvarA.delt' is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<varA.d1DelDirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+
+std::cout<<"\n\nvarB.delt is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<varB.delDirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+
+std::cout<<"\n\nvarB.delt' is: ";
+for(int i=0; i<3; ++i)
+{
+std::cout<<varB.d1DelDirSpatial[i]<<'\t';
+}
+std::cout<<"\n\n";
+////
+
+////
+double a[3], b[3], c[3];
+double d=0.;
+double e=0.;
+double f=0.;
+for(int i=0; i<3; ++i)
+{
+d += varA.delDirSpatial[i]*varB.delDirSpatial[i];
+e += varA.d1DelDirSpatial[i]*varB.delDirSpatial[i];
+f += varA.delDirSpatial[i]*varB.d1DelDirSpatial[i]; 
+}
+for(int i=0; i<3; ++i)
+{
+a[i] = -PD.d1DirSpatial[i]*d;
+b[i] = -PD.dirSpatial[i]*e;
+c[i] = -PD.dirSpatial[i]*f;
+}
+
+std::cout<<"\n\na is: \n";
+for(int i=0; i<3; ++i)
+std::cout<<a[i]<<'\t';
+std::cout<<"\n\n";
+
+std::cout<<"\n\nb is: \n";
+for(int i=0; i<3; ++i)
+std::cout<<b[i]<<'\t';
+std::cout<<"\n\n";
+
+std::cout<<"\n\nc is: \n";
+for(int i=0; i<3; ++i)
+std::cout<<c[i]<<'\t';
+std::cout<<"\n\n";
+////
+*/
 
   // Check consistency of 2nd variations
   double vvEpsilon[2][2], vvRho[2][2], vvDelta[2];
-
-  ////
   double delDELtNum[3], delDELtPrimeNum[3];
-  ////
-  
-  ComputeNumerical2ndVariations(PD, varA, varB, EPS, vvEpsilon, vvRho, vvDelta, delDELtNum, delDELtPrimeNum); ////
+  ComputeNumerical2ndVariations(PD, varA, varB, EPS, vvEpsilon, vvRho, vvDelta, delDELtNum, delDELtPrimeNum); 
 
-  ////
-  if(true)
+  if(PRINT)
     {
       std::cout<<"\n2nd variation of delt : ";
       for(int i=0; i<3; ++i)
-	  std::cout<<"\n"<<delDELt[i]<<" should be "<<delDELtNum[i];
+	std::cout<<"\n"<<delDELt[i]<<" should be "<<delDELtNum[i];
       std::cout<<'\n'<<'\n';
       std::cout<<"\n2nd variation of delt' : ";
       for(int i=0; i<3; ++i)
-	  std::cout<<"\n"<<delDELtPrime[i]<<" should be "<<delDELtPrimeNum[i];
+	std::cout<<"\n"<<delDELtPrime[i]<<" should be "<<delDELtPrimeNum[i];
       std::cout<<"\n\n"; std::fflush( stdout );
     }
   for(int i=0; i<3; ++i)
@@ -244,10 +313,8 @@ int main()
       assert((std::abs(delDELtPrime[i]-delDELtPrimeNum[i]))<1.e-4);
     }
 
-  ////
 
-  
-  if(true) // PRINT
+  if(PRINT) // true
     {
       std::cout<<"\n2nd variation of Epsilon: ";
       for(int i=0; i<2; ++i)
@@ -265,7 +332,6 @@ int main()
   for(int i=0; i<2; ++i)
     for(int j=0; j<2; ++j)
       assert((std::abs(varAB.vvEpsilon[i][j]-vvEpsilon[i][j]) + std::abs(varAB.vvRho[i][j]-vvRho[i][j]) + std::abs(varAB.vvDelta[i]-vvDelta[i]))<1.e-4); 
-
 }
 
 
@@ -306,48 +372,21 @@ void Initialize(PointKinematics& PD)
       PD.d1Phi1[i] = dis(gen);
       PD.d1Phi2[i] = dis(gen);
       PD.dirSpatial[i] = dis(gen);
-      //PD.d1DirSpatial[i] = dis(gen); ////
     }
   double normDirSpatial = sqrt(PD.dirSpatial[0]*PD.dirSpatial[0] + PD.dirSpatial[1]*PD.dirSpatial[1] + PD.dirSpatial[2]*PD.dirSpatial[2]);
 
   for(int i=0; i<3; ++i)
     PD.dirSpatial[i] /= normDirSpatial;
   
-  ////
   double arbvec[3];
   for(int i=0; i<3; ++i)
     arbvec[i] = dis(gen);
   PD.d1DirSpatial[0] = PD.dirSpatial[1]*arbvec[2] - PD.dirSpatial[2]*arbvec[1];
   PD.d1DirSpatial[1] = PD.dirSpatial[2]*arbvec[0] - PD.dirSpatial[0]*arbvec[2];
   PD.d1DirSpatial[2] = PD.dirSpatial[0]*arbvec[1] - PD.dirSpatial[1]*arbvec[0];
-  ////
   
-  PD.ComputeRotationMatrix(); ////
-  
-  /*
-  // Generate a random rotation tensor using the axis-angle representation
-  double theta = dis(gen);
-  double e[3];
-  double norm = 0.;
-  for(int i=0; i<3; ++i)
-    {
-      e[i] = dis(gen);
-      norm +=e[i]*e[i];
-    }
-  norm = sqrt(norm);
-  for(int i=0; i<3; ++i)
-    e[i] /= norm;
-  
-  // Create the rotation matrix
-  double StarE[3][3];
-  HodgeStar(e, StarE);
-  double delta[3][3] = {{1.,0.,0.},{0.,1.,0.},{0.,0.,1.}};
-  for(int i=0; i<3; ++i)
-    for(int j=0; j<3; ++j)
-      PD.Lambda[i][j] =
-	e[i]*e[j] + (delta[i][j]-e[i]*e[j])*(std::cos(theta)) + StarE[i][j]*(std::sin(theta));
-  */
-  
+  PD.ComputeRotationMatrix(); 
+ 
   // Check that the rotation matrix has determinant 1
   double det = 0.;
   for(int i=0; i<3; ++i)
@@ -410,14 +449,15 @@ void ExpSO3(const double* theta, double Mat[][3])
   for(int i=0; i<3; ++i)
     det += Mat[0][i]*(Mat[1][(i+1)%3]*Mat[2][(i+2)%3]-Mat[1][(i+2)%3]*Mat[2][(i+1)%3]);
 
+  /*
   // cout //
   std::cout<<"\n========  Determinant:  "; 
   std::cout<<det;
   std::cout<<"\n";
   // //
+  */
   
   assert(std::abs(det-1.)<1.e-6);
-  
   return;
 }
 
@@ -442,27 +482,8 @@ void Update(PointKinematics& PD, const VarPointKinematics& var)
   const auto* d1Eta0 = var.d1Eta0;
   const auto* d1Eta1 = var.d1Eta1;
   const auto* d1Eta2 = var.d1Eta2;
-  const auto* delDirSpatial = var.delDirSpatial; //// ////
-  //const auto* delDirMaterial = var.delDirMaterial; //// ////
+  const auto* delDirSpatial = var.delDirSpatial; 
   const auto* d1DelDirSpatial = var.d1DelDirSpatial;
-
-  /*
-  double delDirMaterial3Comps[3], delDirSpatial[3]; ////
-  for(int i=0; i<2; ++i) ////
-    delDirMaterial3Comps[i] = delDirMaterial[i]; ////
-  delDirMaterial3Comps[2] = 0.; ////
-
-  ////
-  for(int i=0; i<3; ++i) 
-    {
-      delDirSpatial[i] = 0.; 
-      for(int j=0; j<3; ++j) 
-	{
-	  delDirSpatial[i] += Lambda[i][j]*delDirMaterial3Comps[j]; 
-	}
-    }
-  ////
-  */
   
   // Update rotations
   double delTheta[3];
@@ -510,8 +531,23 @@ void Update(PointKinematics& PD, const VarPointKinematics& var)
     }
 }
 
+// Compute cross product of three vectors
+void CrossProduct3(const double a[3],
+		   const double b[3],
+		   const double c[3],
+		   double d[3])
+{
+  double k1=0.;
+  double k2=0.;
+  for(int i=0; i<3; ++i)
+    {
+      k1 += a[i]*c[i];
+      k2 += b[i]*c[i];
+    }
+  for(int i=0; i<3; ++i)
+    d[i] = k1*b[i] - k2*a[i];
+}
 
-//// ////
 // Update the 1st variations with 2nd variations
 void UpdateVar(VarPointKinematics& var1,
 	       const PointKinematics& PD1,
@@ -527,13 +563,28 @@ void UpdateVar(VarPointKinematics& var1,
       //var1.d1Eta2[i] += eps*0.;
 
       // aliases for 2nd variation calculation
-      auto* t = PD1.dirSpatial;
-      auto* tPrime = PD1.d1DirSpatial;
+      const auto* t = PD1.dirSpatial;
+      const auto* tPrime = PD1.d1DirSpatial;
       auto* delt = var1.delDirSpatial;
       auto* deltPrime = var1.d1DelDirSpatial;
-      auto* tEps = PD2.dirSpatial;
-      auto* tPrimeEps = PD2.d1DirSpatial;
+      const auto* tEps = PD2.dirSpatial;
+      const auto* tPrimeEps = PD2.d1DirSpatial;
 
+      double tempvec1[3], tempvec2[3], tempvec3[3], tempvec4[3];
+      
+      CrossProduct3(t, delt, tEps, tempvec1);
+      CrossProduct3(tPrime, delt, tEps, tempvec2);
+      CrossProduct3(t, deltPrime, tEps, tempvec3);
+      CrossProduct3(t, delt, tPrimeEps, tempvec4);
+
+      for(int i=0; i<3; ++i)
+	{
+	  delt[i] = tempvec1[i];
+	  deltPrime[i] = tempvec2[i] + tempvec3[i] + tempvec4[i];
+	}
+      ////
+
+      /*
       double delTheta[3];
       delTheta[0] = t[1]*delt[2] - t[2]*delt[1];
       delTheta[1] = t[2]*delt[0] - t[0]*delt[2];
@@ -543,7 +594,7 @@ void UpdateVar(VarPointKinematics& var1,
       delt[1] = delTheta[2]*tEps[0] - delTheta[0]*tEps[2];
       delt[2] = delTheta[0]*tEps[1] - delTheta[1]*tEps[0];
 
-      double tempvec1[3], tempvec2[3], tempvec3[3];
+      // delt is being UPDATED, now we should not use that updated value, but we were using those updated values of delt, that's why it was not working
 
       tempvec1[0] = tPrime[1]*delt[2] - tPrime[2]*delt[1];
       tempvec1[1] = tPrime[2]*delt[0] - tPrime[0]*delt[2];
@@ -570,12 +621,11 @@ void UpdateVar(VarPointKinematics& var1,
       tempvec6[1] = tempvec3[2]*tPrimeEps[0] - tempvec3[0]*tPrimeEps[2];
       tempvec6[2] = tempvec3[0]*tPrimeEps[1] - tempvec3[1]*tPrimeEps[0];
 
-      deltPrime[0] = tempvec4[0] + tempvec5[0] + tempvec6[0];
-      deltPrime[1] = tempvec4[1] + tempvec5[1] + tempvec6[1];
-      deltPrime[2] = tempvec4[2] + tempvec5[2] + tempvec6[2]; 
+      for(int i=0; i<3; ++i)
+	deltPrime[i] = tempvec4[i] + tempvec5[i] + tempvec6[i];
+      */
     }
 }
-//// ////
 
 // Compute numerical values for 1st variations
 void ComputeNumericalVariations(const PointKinematics& PD,
@@ -597,21 +647,15 @@ void ComputeNumericalVariations(const PointKinematics& PD,
       varplus.d1Eta0[i] *= eps; varminus.d1Eta0[i] *= -eps;
       varplus.d1Eta1[i] *= eps; varminus.d1Eta1[i] *= -eps;
       varplus.d1Eta2[i] *= eps; varminus.d1Eta2[i] *= -eps;
-      //varplus.delDirSpatial[i] *= eps; varminus.delDirSpatial[i] *= -eps; ////
       varplus.d1DelDirSpatial[i] *= eps; varminus.d1DelDirSpatial[i] *= -eps; 
     }
-  
-  ////
   for(int i=0; i<2; ++i)
     { varplus.delDirMaterial[i] *= eps;
       varminus.delDirMaterial[i] *= -eps; }
-  ////
 
-  //// ////
   varplus.ComputeDelDirSpatial();
   varminus.ComputeDelDirSpatial();
-  //// ////
-  
+
   const double y = 0.1;
   const double w = 0.2;
 
@@ -638,6 +682,7 @@ void ComputeNumericalVariations(const PointKinematics& PD,
 }
 
 
+
 // Compute numerical values of 2nd variations
 void ComputeNumerical2ndVariations(const PointKinematics& PD,
 				   const VarPointKinematics& var,
@@ -646,8 +691,8 @@ void ComputeNumerical2ndVariations(const PointKinematics& PD,
 				   double vvEpsilon[2][2],
 				   double vvRho[2][2],
 				   double vvDelta[2],
-				   double delDelt[3],      //////
-				   double delDeltPrime[3]) //////
+				   double delDelt[3],      
+				   double delDeltPrime[3]) 
 {
   // Update PD along the variation VAR
   VarPointKinematics VARplus(VAR), VARminus(VAR);
@@ -659,25 +704,10 @@ void ComputeNumerical2ndVariations(const PointKinematics& PD,
       VARplus.d1Eta0[i] *= eps; VARminus.d1Eta0[i] *= -eps;
       VARplus.d1Eta1[i] *= eps; VARminus.d1Eta1[i] *= -eps;
       VARplus.d1Eta2[i] *= eps; VARminus.d1Eta2[i] *= -eps;
-      VARplus.delDirSpatial[i] *= eps; VARminus.delDirSpatial[i] *= -eps; //// ////
+      VARplus.delDirSpatial[i] *= eps; VARminus.delDirSpatial[i] *= -eps; 
       VARplus.d1DelDirSpatial[i] *= eps; VARminus.d1DelDirSpatial[i] *= -eps;
     }
 
-  /*
-  ////
-  for(int i=0; i<2; ++i)
-    { VARplus.delDirMaterial[i] *= eps;
-      VARminus.delDirMaterial[i] *= -eps; }
-  ////
-  */
-
-  /*
-  //// ////
-  VARplus.ComputeDelDirSpatial();
-  VARminus.ComputeDelDirSpatial();
-  //// ////
-  */
-  
   const double y = 0.1;
   const double w = 0.2;
   
@@ -691,20 +721,58 @@ void ComputeNumerical2ndVariations(const PointKinematics& PD,
 
   // Compute 1st variations with perturbed states
   VarPointKinematics varplus(var);
-  varplus.PD = &PDplus;
 
-  ////
+  /*
+  double tempvec20[3], tempvec21[3], tempvec22[3], tempvec23[3];
+  CrossProduct3(PD.d1DirSpatial, varplus.delDirSpatial, PDplus.dirSpatial, tempvec20);
+  CrossProduct3(PD.dirSpatial, varplus.d1DelDirSpatial, PDplus.dirSpatial, tempvec21);
+  CrossProduct3(PD.dirSpatial, varplus.delDirSpatial, PDplus.d1DirSpatial, tempvec22);
+  for(int i=0; i<3; ++i)
+    tempvec23[i] = tempvec20[i] + tempvec21[i] + tempvec22[i];
+  */
+
+  varplus.PD = &PDplus;
   UpdateVar(varplus, PD, PDplus);
-  ////
-  
   varplus.ComputeVarStrains(y,w);
 
   VarPointKinematics varminus(var);
-  varminus.PD = &PDminus;
 
-  ////
+  /*
+  double tempvec30[3], tempvec31[3], tempvec32[3], tempvec33[3];
+  CrossProduct3(PD.d1DirSpatial, varminus.delDirSpatial, PDplus.dirSpatial, tempvec30);
+  CrossProduct3(PD.dirSpatial, varminus.d1DelDirSpatial, PDplus.dirSpatial, tempvec31);
+  CrossProduct3(PD.dirSpatial, varminus.delDirSpatial, PDplus.d1DirSpatial, tempvec32);
+  for(int i=0; i<3; ++i)
+    tempvec33[i] = tempvec30[i] + tempvec31[i] + tempvec32[i];
+  */
+  
+  varminus.PD = &PDminus;
   UpdateVar(varminus, PD, PDminus);
+  varminus.ComputeVarStrains(y,w);
+
+  /*
   ////
+  std::cout<<"\n\nCalculated varplus.d1DirSpatial is: \n";
+  for(int i=0; i<3; ++i)
+    std::cout<<tempvec23[i]<<'\t';
+  std::cout<<"\n\n";
+  
+  std::cout<<"\n\nvarplus.d1DelDirSpatial is: \n";
+  for(int i=0; i<3; ++i)
+    std::cout<<varplus.d1DelDirSpatial[i]<<'\t';
+  std::cout<<"\n\n";
+
+  std::cout<<"\n\nCalculated varminus.d1DirSpatial is: \n";
+  for(int i=0; i<3; ++i)
+    std::cout<<tempvec33[i]<<'\t';
+  std::cout<<"\n\n";
+  
+  std::cout<<"\n\nvarminus.d1DelDirSpatial is: \n";
+  for(int i=0; i<3; ++i)
+    std::cout<<varminus.d1DelDirSpatial[i]<<'\t';
+  std::cout<<"\n\n";
+  ////
+  */
 
   ////
   for(int i=0; i<3; ++i)
@@ -713,7 +781,7 @@ void ComputeNumerical2ndVariations(const PointKinematics& PD,
       delDeltPrime[i] = (varplus.d1DelDirSpatial[i] - varminus.d1DelDirSpatial[i])/(2*eps);
     }
   
-  varminus.ComputeVarStrains(y,w);
+  //varminus.ComputeVarStrains(y,w);
 
   // Compute second variations
   for(int i=0; i<2; ++i)

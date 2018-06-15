@@ -64,17 +64,6 @@ namespace TriRods
   }
 
   // Comutes cross-product of two vectors
-  /*Vec3 CrossProduct(const Vec3 v1, const Vec3 v2)
-  {
-    Vec3 v3;
-    double Skw[3][3];
-    HodgeStar(v1, Skw);
-    for(int i=0; i<3; ++i)
-      for(int j=0; j<3; ++j)
-	v3[i] = Skw[i][j]*v2[j];
-	return v3;*/
-
-  // Comutes cross-product of two vectors
   Vec3 CrossProduct(const Vec3 v1, const Vec3 v2)
   {
     Vec3 v3;

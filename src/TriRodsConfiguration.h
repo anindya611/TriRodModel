@@ -106,8 +106,8 @@ namespace TriRods
     std::vector<Vec3> phi0; // Centerline of shell
     std::vector<Vec3> phi1; // 1st edge of shell
     std::vector<Vec3> phi2; // 2nd edge of shell
-    std::vector<Mat3> Lambda; // vector of rotation tensor 
-    std::vector<Vec3> dirSpatial; // spatial_director of shell 
+    std::vector<Mat3> Lambda; // Rotation tensor 
+    std::vector<Vec3> dirSpatial; // Spatial_Director of shell 
     bool isInitialized; // has the initial configuration of the shell initialized
   };
 }

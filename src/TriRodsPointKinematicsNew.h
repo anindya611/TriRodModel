@@ -246,7 +246,7 @@ namespace TriRods
 	  eta0[i] = Obj.eta0[i];
 	  eta1[i] = Obj.eta1[i];
 	  eta2[i] = Obj.eta2[i];
-	  delDirSpatial[i] = Obj.delDirSpatial[i]; //// ////
+	  delDirSpatial[i] = Obj.delDirSpatial[i]; 
 	  d1Eta0[i] = Obj.d1Eta0[i];
 	  d1Eta1[i] = Obj.d1Eta1[i];
 	  d1Eta2[i] = Obj.d1Eta2[i];
@@ -256,7 +256,7 @@ namespace TriRods
 	}
       for(int i=0; i<2; ++i)
 	{
-	  delDirMaterial[i] = Obj.delDirMaterial[i]; ////
+	  delDirMaterial[i] = Obj.delDirMaterial[i]; 
 	  vq[i] = Obj.vq[i];
 	  vDelta[i] = Obj.vDelta[i];
 	  for(int j=0; j<2; ++j)
@@ -284,7 +284,7 @@ namespace TriRods
 	  eta0[i] = 0.;
 	  eta1[i] = 0.;
 	  eta2[i] = 0.;
-	  delDirSpatial[i] = 0.; //// ////
+	  delDirSpatial[i] = 0.; 
 	  d1Eta0[i] = 0.;
 	  d1Eta1[i] = 0.;
 	  d1Eta2[i] = 0.;
@@ -294,7 +294,7 @@ namespace TriRods
 	}
       for(int i=0; i<2; ++i)
 	{
-	  delDirMaterial[i] = 0.; ////
+	  delDirMaterial[i] = 0.; 
 	  vq[i] = 0.;
 	  vDelta[i] = 0.;
 	  for(int j=0; j<2; ++j)
@@ -307,7 +307,6 @@ namespace TriRods
 	}
     }
 
-    ////
     // Compute delDirSpatial
     inline void ComputeDelDirSpatial()
     {
@@ -333,7 +332,6 @@ namespace TriRods
       const auto* a2 = PD->a2;
       const auto* dirSpatial = PD->dirSpatial;
       const auto* d1DirSpatial = PD->d1DirSpatial;
-      //const auto* Lambda = PD->Lambda; //// ////
 
       for(int i=0; i<3; ++i)
 	{
@@ -429,51 +427,18 @@ namespace TriRods
       const auto* a2 = PD->a2;
       const auto* t = PD->dirSpatial;
       const auto* d1t = PD->d1DirSpatial;
-      //const auto* Lambda = PD->Lambda; //// ////
-
+      
       // Aliases for the 1st variation
       const auto* va1 = deltaPD->va1;
       const auto* va2 = deltaPD->va2;
-      const auto* delt = deltaPD->delDirSpatial; //// ////
-      //const auto* delT = deltaPD->delDirMaterial; //// ////
+      const auto* delt = deltaPD->delDirSpatial; 
       const auto* d1delt = deltaPD->d1DelDirSpatial;
-
-      /*
-      ////
-      double delT3[3], delt[3];
-      for(int i=0; i<2; ++i)
-	delT3[i] = delT[i];
-      delT3[2] = 0.;
-      for(int i=0; i<3; ++i)
-	{
-	  delt[i] = 0.;
-	  for(int j=0; j<3; ++j)
-	    delt[i] += Lambda[i][j]*delT3[j];
-	}
-      ////
-      */
 
       // Aliases for another 1st variation
       const auto* Va1 = DELTAPD->va1;
       const auto* Va2 = DELTAPD->va2;
-      const auto* DELt = DELTAPD->delDirSpatial; //// ////
-      //const auto* DELT = DELTAPD->delDirMaterial; ////
+      const auto* DELt = DELTAPD->delDirSpatial; 
       const auto* d1DELt = DELTAPD->d1DelDirSpatial;
-
-      /*
-      ////
-      double DELT3[3], DELt[3];
-      for(int i=0; i<2; ++i)
-	DELT3[i] = DELT[i];
-      DELT3[2] = 0.;
-      for(int i=0; i<3; ++i)
-	{
-	  DELt[i] = 0.;
-	  for(int j=0; j<3; ++j)
-	    DELt[i] += Lambda[i][j]*DELT3[j];
-	}
-      ////
-      */
 
       double tempvec1[3];
       double tempvec2[3];
