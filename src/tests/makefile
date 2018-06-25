@@ -13,8 +13,12 @@ newTestPointKinematics: newTestPointKinematics.o
 	${CLINKER} ${CFLAGS} ${CPPFLAGS} -o $@ $^ ${LIBS} 
 	${RM} $^
 
+testOps: testOps.o
+	${CLINKER} ${CFLAGS} ${CPPFLAGS} -o $@ $^ ${LIBS} 
+	${RM} $^
+
 Clean:
-	-rm -f testPointKinematics newTestPointKinematics 
+	-rm -f testPointKinematics newTestPointKinematics testOps 
 	-rm -f *.o
 	-rm -rf *.dSYM
 

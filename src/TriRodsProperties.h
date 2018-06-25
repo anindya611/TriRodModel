@@ -2,7 +2,7 @@
 #define TRI_RODS_PROPERTIES_H
 
 #include <cassert>
-#include <TriRodsPointKinematics.h>
+#include <TriRodsPointKinematicsNew.h>
 
 namespace TriRods
 {
@@ -13,14 +13,15 @@ namespace TriRods
     double E; // young's modulus
     double h; // thickness of the ribbon 
     double nu; // poisson's ratio
+    double w; // width of the ribbon/rod  ////
 
     // Constructor
-    inline MatProperties(double v1, double v2, double v3)
-      :E(v1), h(v2), nu(v3) {}
+    inline MatProperties(double v1, double v2, double v3, double v4)
+      :E(v1), h(v2), nu(v3), w(v4) {}  ////
 
     // Copy constructor
     inline MatProperties(const MatProperties& Obj)
-      :E(Obj.E), h(Obj.h), nu(Obj.nu) {}
+      :E(Obj.E), h(Obj.h), nu(Obj.nu), w(Obj.w) {}
 
     // Destructor
     inline virtual ~MatProperties() {}
@@ -32,8 +33,15 @@ namespace TriRods
 	this->E = rhs.E;
 	this->h = rhs.h;
 	this->nu = rhs.nu;
+	this->w = rhs.w; ////
 	return *this;
       }
+
+    ////
+    // Returns the width of the ribbon
+    double GetWidth()
+    { return w; }
+    ////
   };
 
 

@@ -1,7 +1,7 @@
 #ifndef TRI_RODS_OPS_H
 #define TRI_RODS_OPS_H
 
-#include <TriRodsConfiguration.h>
+#include <TriRodsConfigurationNew1.h>
 #include <TriRodsProperties.h>
 #include <TriRodsOpsWorkspace.h>
 #include <ElementalOperation.h>
@@ -19,7 +19,7 @@ namespace TriRods
 	       OpsWorkspace* wrkspc)
       :DResidue(), Elm(elm), fields(fieldnums), ConfigStr(str),
       Mat(&mat), WrkSpc(wrkspc)
-    { assert(static_cast<int>()==11 &&
+    { assert(static_cast<int>(fields.size())==11 &&
 	     "TriRods::Ops::Ops has expected 11 fields"); }
 
     // Destructor, does nothing

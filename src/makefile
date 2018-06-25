@@ -5,9 +5,10 @@ CPPFLAGS = 	-std=c++11 -O2 \
 		-I${TRIRODDIR}/include \
 		-I${GSLPATH}/include
 
-SOURCECXX = 	TriRodsConfiguration.cpp  \
+SOURCECXX = 	TriRodsConfigurationNew1.cpp  \
 		TriRodsProperties.cpp \
-		TriRodsUtils.cpp 
+		TriRodsUtils.cpp \
+                TriRodsOps.cpp
 
 include ${PETSC_DIR}/lib/petsc/conf/variables
 include ${PETSC_DIR}/lib/petsc/conf/rules
